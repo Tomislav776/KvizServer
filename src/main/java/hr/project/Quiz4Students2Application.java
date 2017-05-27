@@ -1,6 +1,6 @@
 package hr.project;
 
-import hr.project.model.Smjer;
+import hr.project.model.Course;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,13 +17,13 @@ public class Quiz4Students2Application {
 	}
 
 
-	@Bean
-	CommandLineRunner init(SmjerRepository smjerRepository) {
+	/*@Bean
+	CommandLineRunner init(CourseRepository courseRepository) {
 		return (evt) -> Arrays.asList(1,2,3,4).forEach(
 						a -> {
-							Smjer smjer = smjerRepository.save(new Smjer(a+100, "nazivjjj"));
-							System.out.println(a + " " + smjer.getId() + " " + smjer.getNaziv() );
+							Course course = courseRepository.save(new Course(a+100, "nazivjjj"));
+							System.out.println(a + " " + course.getId() + " " + course.getName() );
 						});
-	}
+	}*/
 }
 
