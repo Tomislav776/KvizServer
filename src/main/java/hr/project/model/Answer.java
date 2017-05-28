@@ -1,7 +1,7 @@
 package hr.project.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,9 +28,18 @@ public class Answer implements Serializable {
     @Column(name= "correct")
     private boolean correct;
 
+    @Column(name= "question_id")
+    private Integer question_id;
+
+    //@JsonBackReference(value = "question-answers")
     @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name="question_id")
+    @JsonIgnore
+    @JoinColumn(name="question_id" , insertable = false, updatable = false)
     private Question question;
+
+    public Answer(String answer, boolean correct) {
+        this.answer = answer;
+        this.correct = correct;
+    }
 
 }

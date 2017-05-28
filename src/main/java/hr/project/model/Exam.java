@@ -1,6 +1,7 @@
 package hr.project.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -26,12 +27,14 @@ public class Exam implements Serializable{
     @Column(name= "name")
     private String name;
 
+    @Column(name= "subject_id")
+    private Integer subject_id;
+
     @OneToMany(mappedBy="exam")
-    @JsonManagedReference
     private List<Question> questions;
 
     @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name="subject_id")
+    @JsonIgnore
+    @JoinColumn(name="subject_id", insertable = false, updatable = false)
     private Subject subject;
 }

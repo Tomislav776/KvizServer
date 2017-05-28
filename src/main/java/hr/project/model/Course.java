@@ -27,11 +27,9 @@ public class Course implements Serializable{
     private String name;
 
     @OneToMany(mappedBy="course")
-    @JsonManagedReference
     private List<Subject> subjects;
 
     @OneToMany(mappedBy="course")
-    @JsonManagedReference
     private List<User> users;
 
 }

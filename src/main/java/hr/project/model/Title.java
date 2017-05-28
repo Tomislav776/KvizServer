@@ -28,6 +28,5 @@ public class Title implements Serializable {
     private Integer points;
 
     @OneToMany(mappedBy="title")
-    @JsonManagedReference
     private List<User> users;
 }

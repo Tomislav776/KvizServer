@@ -1,12 +1,14 @@
 package hr.project.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -14,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class User {
+public class User implements Serializable{
 
     @Id
     @Column(name= "id")
@@ -30,30 +32,36 @@ public class User {
     @Column(name= "password")
     private String password;
 
+    @Column(name= "role_id")
+    private String role_id;
+
+    @Column(name= "title_id")
+    private String title_id;
+
+    @Column(name= "course_id")
+    private String course_id;
+
     @OneToMany(mappedBy="user")
-    @JsonManagedReference
     private List<Statistic> statistics;
 
     @OneToMany(mappedBy="user1")
-    @JsonManagedReference
     private List<Game> game1;
 
     @OneToMany(mappedBy="user2")
-    @JsonManagedReference
     private List<Game> game2;
 
     @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name="role_id")
+    @JsonIgnore
+    @JoinColumn(name="role_id", insertable = false, updatable = false)
     private Role role;
 
     @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name="title_id")
+    @JsonIgnore
+    @JoinColumn(name="title_id", insertable = false, updatable = false)
     private Title title;
 
     @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name="course_id")
+    @JsonIgnore
+    @JoinColumn(name="course_id", insertable = false, updatable = false)
     private Course course;
 }

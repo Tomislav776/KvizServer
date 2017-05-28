@@ -25,6 +25,5 @@ public class Role implements Serializable {
     private String name;
 
     @OneToMany(mappedBy="role")
-    @JsonManagedReference
     private List<User> users;
 }

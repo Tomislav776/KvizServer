@@ -1,13 +1,13 @@
 package hr.project.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,16 +25,19 @@ public class Question implements Serializable {
     @Column(name= "question")
     private String question;
 
+    @Column(name= "exam_id")
+    private Integer exam_id;
+
     @OneToMany(mappedBy="question")
-    @JsonManagedReference
     private List<Report> reports;
 
     @OneToMany(mappedBy="question")
-    @JsonManagedReference
     private List<Answer> answers;
 
     @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name="exam_id")
+    @JsonIgnore
+    @JoinColumn(name="exam_id", insertable = false, updatable = false)
     private Exam exam;
+
+
 }

@@ -1,6 +1,7 @@
 package hr.project.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,13 +24,19 @@ public class Statistic implements Serializable {
     @Column(name= "points")
     private Integer points;
 
+    @Column(name= "user_id")
+    private Integer user_id;
+
+    @Column(name= "subject_id")
+    private Integer subject_id;
+
     @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name="user_id")
+    @JsonIgnore
+    @JoinColumn(name="user_id", insertable = false, updatable = false)
     private User user;
 
     @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name="subject_id")
+    @JsonIgnore
+    @JoinColumn(name="subject_id", insertable = false, updatable = false)
     private Subject subject;
 }

@@ -7,8 +7,14 @@ import hr.project.model.Exam;
 import hr.project.repository.CourseRepository;
 import hr.project.repository.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/exam")
@@ -27,11 +33,57 @@ public class ExamRestController {
         return new Error(404, "Object [" + id + "] not found");
     }
 
-    @RequestMapping(value="/{id}", method= RequestMethod.GET)
-    public Exam examById(@PathVariable Integer id) {
+    @RequestMapping(method=RequestMethod.GET)
+    public ResponseEntity<List<Exam>> findAll() {
+        List<Exam> exams = examRepository.findAll();
+        if (exams.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(exams);
+    }
+
+    @RequestMapping(value="/{id}", method=RequestMethod.GET)
+    public ResponseEntity<Exam> findById(@PathVariable Integer id) {
         Exam exam = examRepository.findById(id);
         if (exam == null) { throw new ObjectNotFound(id); }
-        return exam;
+        return ResponseEntity.ok(exam);
+    }
+
+    @RequestMapping(method=RequestMethod.POST, consumes="application/json")
+    public ResponseEntity<Exam> save(@RequestBody Exam exam, UriComponentsBuilder ucb) {
+        HttpHeaders headers = new HttpHeaders();
+
+        try{
+            exam = examRepository.save(exam);
+            URI locationUri = ucb.path("/exam/").path(String.valueOf(exam.getId())).build().toUri();
+            headers.setLocation(locationUri);
+            return new ResponseEntity<>(exam, headers, HttpStatus.CREATED);
+        }
+        catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exam);
+        }
+    }
+
+    @RequestMapping(path="/{id}",method=RequestMethod.PUT)
+    public ResponseEntity<Void> update(@RequestBody Exam exam,@PathVariable Integer id)  {
+
+        if (!(examRepository.exists(id))){
+            return ResponseEntity.notFound().build();
+        }
+        exam.setId(id);
+        examRepository.save(exam);
+        return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
+    public ResponseEntity<String> deleteById(@PathVariable Integer id) {
+        try {
+            examRepository.delete(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Item successfully deleted!");
+        }
+        catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error deleting the item:" + ex.toString());
+        }
     }
 
 }

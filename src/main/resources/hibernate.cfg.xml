@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+    <session-factory>
+        <mapping class="hr.project.model.Question"/>
+        <mapping class="hr.project.model.Title"/>
+        <mapping class="hr.project.model.Subject"/>
+        <mapping class="hr.project.model.Statistic"/>
+        <mapping class="hr.project.model.Role"/>
+        <mapping class="hr.project.model.Answer"/>
+        <mapping class="hr.project.model.Course"/>
+        <mapping class="hr.project.model.Exam"/>
+        <mapping class="hr.project.model.Game"/>
+        <mapping class="hr.project.model.Report"/>
+        <mapping class="hr.project.model.User"/>
+    </session-factory>
+
+</hibernate-configuration>
