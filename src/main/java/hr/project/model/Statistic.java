@@ -27,6 +27,9 @@ public class Statistic implements Serializable {
     @Column(name= "user_id")
     private Integer user_id;
 
+    @Column(name= "questions_user")
+    private String questions_user;
+
     @Column(name= "subject_id")
     private Integer subject_id;
 

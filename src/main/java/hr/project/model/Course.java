@@ -27,9 +27,6 @@ public class Course implements Serializable{
     @Column(name= "name")
     private String name;
 
-    @Column(name= "semester")
-    private Integer semester;
-
     @OneToMany(mappedBy="course")//, fetch = FetchType.LAZY)
     private List<Subject> subjects;
 
