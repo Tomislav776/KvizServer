@@ -39,17 +39,17 @@ public class Game implements Serializable {
     @Column(name= "user2_id")
     private Integer user2_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="subject_id", insertable = false, updatable = false)
     private Subject subject;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="user1_id", insertable = false, updatable = false)
     private User user1;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="user2_id", insertable = false, updatable = false)
     private User user2;

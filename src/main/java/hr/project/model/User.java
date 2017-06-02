@@ -32,14 +32,20 @@ public class User implements Serializable{
     @Column(name= "password")
     private String password;
 
+    @Column(name= "image")
+    private String image;
+
+    @Column(name= "semester")
+    private Integer semester;
+
     @Column(name= "role_id")
-    private String role_id;
+    private Integer role_id;
 
     @Column(name= "title_id")
-    private String title_id;
+    private Integer title_id;
 
     @Column(name= "course_id")
-    private String course_id;
+    private Integer course_id;
 
     @OneToMany(mappedBy="user")
     private List<Statistic> statistics;
@@ -50,17 +56,17 @@ public class User implements Serializable{
     @OneToMany(mappedBy="user2")
     private List<Game> game2;
 
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne//(fetch = FetchType.LAZY)
+    //@JsonIgnore
     @JoinColumn(name="role_id", insertable = false, updatable = false)
     private Role role;
 
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne//(fetch = FetchType.LAZY)
+    //@JsonIgnore
     @JoinColumn(name="title_id", insertable = false, updatable = false)
     private Title title;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="course_id", insertable = false, updatable = false)
     private Course course;

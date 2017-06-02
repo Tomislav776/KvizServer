@@ -1,5 +1,6 @@
 package hr.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Role implements Serializable {
     @Column(name= "name")
     private String name;
 
-    @OneToMany(mappedBy="role")
+    @OneToMany(mappedBy="role")//, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<User> users;
 }

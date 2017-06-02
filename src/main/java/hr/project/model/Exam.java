@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,11 +32,12 @@ public class Exam implements Serializable{
     @Column(name= "subject_id")
     private Integer subject_id;
 
-    @OneToMany(mappedBy="exam")
+    @OneToMany(mappedBy="exam")//, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     private List<Question> questions;
 
-    @ManyToOne
+    @ManyToOne// (fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="subject_id", insertable = false, updatable = false)
     private Subject subject;
+
 }

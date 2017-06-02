@@ -30,12 +30,12 @@ public class Statistic implements Serializable {
     @Column(name= "subject_id")
     private Integer subject_id;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="user_id", insertable = false, updatable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="subject_id", insertable = false, updatable = false)
     private Subject subject;

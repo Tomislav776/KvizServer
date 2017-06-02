@@ -26,19 +26,17 @@ public class Subject implements Serializable{
     @Column(name= "name")
     private String name;
 
-    @Column(name= "course_id")
-    private Integer course_id;
 
-    @OneToMany(mappedBy="subject")
+    @OneToMany(mappedBy="subject")//, fetch = FetchType.LAZY)
     private List<Exam> exam;
 
-    @OneToMany(mappedBy="subject")
+    @OneToMany(mappedBy="subject")//, fetch = FetchType.LAZY)
     private List<Game> Games;
 
-    @OneToMany(mappedBy="subject")
+    @OneToMany(mappedBy="subject")//, fetch = FetchType.LAZY)
     private List<Statistic> statistics;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="course_id", insertable = false, updatable = false)
     private Course course;

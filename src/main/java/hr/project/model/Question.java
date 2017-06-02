@@ -28,13 +28,13 @@ public class Question implements Serializable {
     @Column(name= "exam_id")
     private Integer exam_id;
 
-    @OneToMany(mappedBy="question")
+    @OneToMany(mappedBy="question") //fetch = FetchType.LAZY
     private List<Report> reports;
 
-    @OneToMany(mappedBy="question")
+    @OneToMany(mappedBy="question")//fetch = FetchType.LAZY,
     private List<Answer> answers;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="exam_id", insertable = false, updatable = false)
     private Exam exam;

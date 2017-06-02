@@ -13,6 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.net.URI;
 import java.util.List;
 
@@ -20,6 +24,12 @@ import java.util.List;
 @RequestMapping("/exam")
 public class ExamRestController {
     private final ExamRepository examRepository;
+
+    /*private EntityManager entityManager;
+
+    @PersistenceContext
+    private EntityManager em;
+    */
 
     @Autowired
     ExamRestController(ExamRepository examRepository) {
@@ -45,6 +55,8 @@ public class ExamRestController {
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<Exam> findById(@PathVariable Integer id) {
         Exam exam = examRepository.findById(id);
+        //Exam exam = examRepository.setSingleResultById(id);
+
         if (exam == null) { throw new ObjectNotFound(id); }
         return ResponseEntity.ok(exam);
     }

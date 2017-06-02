@@ -27,7 +27,7 @@ public class Report implements Serializable {
     @Column(name= "question_id")
     private Integer question_id;
 
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="question_id", insertable = false, updatable = false)
     private Question question;

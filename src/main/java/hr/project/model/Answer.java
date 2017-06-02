@@ -32,14 +32,11 @@ public class Answer implements Serializable {
     private Integer question_id;
 
     //@JsonBackReference(value = "question-answers")
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="question_id" , insertable = false, updatable = false)
     private Question question;
 
-    public Answer(String answer, boolean correct) {
-        this.answer = answer;
-        this.correct = correct;
-    }
+
 
 }

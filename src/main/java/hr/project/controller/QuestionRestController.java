@@ -47,6 +47,7 @@ public class QuestionRestController {
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<Question> findById(@PathVariable Integer id) {
         Question question = questionRepository.findById(id);
+        //Question question = questionRepository.setSingleResultById(id);
         if (question == null) { throw new ObjectNotFound(id); }
         return ResponseEntity.ok(question);
     }
