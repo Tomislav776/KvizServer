@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.net.URI;
 import java.util.List;
 
@@ -49,17 +51,25 @@ public class UserRestController {
         return ResponseEntity.ok(user);
     }
 
+    @RequestMapping(value="/login", method=RequestMethod.POST, consumes="application/json")
+    public ResponseEntity<User> login(@RequestBody User user, UriComponentsBuilder ucb) {
+        User userInDB = userRepository.findById(user.getId());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (encoder.matches(user.getPassword(), userInDB.getPassword())) {
+            return new ResponseEntity<>(user, null, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(user, null, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @RequestMapping(method=RequestMethod.POST, consumes="application/json")
     public ResponseEntity<User> save(@RequestBody User user, UriComponentsBuilder ucb) {
-        HttpHeaders headers = new HttpHeaders();
+        user.setPassword(new BCryptPasswordEncoder(15).encode(user.getPassword()));
 
-        try{
+        try {
             user = userRepository.save(user);
-            URI locationUri = ucb.path("/user/").path(String.valueOf(user.getId())).build().toUri();
-            headers.setLocation(locationUri);
-            return new ResponseEntity<>(user, headers, HttpStatus.CREATED);
-        }
-        catch (Exception ex) {
+            return new ResponseEntity<>(user, null, HttpStatus.CREATED);
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(user);
         }
     }
