@@ -33,6 +33,7 @@ public class Exam implements Serializable{
     private Integer subject_id;
 
     @OneToMany(mappedBy="exam")//, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @JsonIgnore
     private List<Question> questions;
 
     @ManyToOne// (fetch = FetchType.LAZY)

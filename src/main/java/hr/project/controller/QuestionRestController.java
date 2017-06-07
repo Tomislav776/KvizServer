@@ -2,26 +2,32 @@ package hr.project.controller;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Game;
 import hr.project.model.Question;
-import hr.project.repository.GameRepository;
 import hr.project.repository.QuestionRepository;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/question")
 public class QuestionRestController {
     private final QuestionRepository questionRepository;
+
+    @PersistenceContext
+    private EntityManager em;
+
+    private Session configurarSessao() {
+        return  em.unwrap(org.hibernate.Session.class);
+    }
 
     @Autowired
     QuestionRestController(QuestionRepository questionRepository) {
@@ -35,9 +41,23 @@ public class QuestionRestController {
         return new Error(404, "Object [" + id + "] not found");
     }
 
-    @RequestMapping(method=RequestMethod.GET)
-    public ResponseEntity<List<Question>> findAll() {
-        List<Question> questions = questionRepository.findAll();
+    @RequestMapping(value="/all/{examId}", method=RequestMethod.GET)
+    public ResponseEntity<List<Question>> findAll(@PathVariable Integer examId) {
+        List<Question> questions = questionRepository.findAllByexam_id(examId);
+        if (questions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(questions);
+    }
+    
+
+    @RequestMapping(value="/random/{examId}", method=RequestMethod.GET)
+    public ResponseEntity<List<Question>> get10Random(@PathVariable Integer examId) {
+        List questions = configurarSessao().createQuery("select o from Question o where o.exam_id = :examId  order by rand()")
+                .setParameter("examId", examId)
+                .setMaxResults(10)
+                .list();
+
         if (questions.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -47,7 +67,6 @@ public class QuestionRestController {
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<Question> findById(@PathVariable Integer id) {
         Question question = questionRepository.findById(id);
-        //Question question = questionRepository.setSingleResultById(id);
         if (question == null) { throw new ObjectNotFound(id); }
         return ResponseEntity.ok(question);
     }

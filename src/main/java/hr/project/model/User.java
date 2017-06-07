@@ -51,9 +51,11 @@ public class User implements Serializable{
     private List<Statistic> statistics;
 
     @OneToMany(mappedBy="user1")
+    @JsonIgnore
     private List<Game> game1;
 
     @OneToMany(mappedBy="user2")
+    @JsonIgnore
     private List<Game> game2;
 
     @ManyToOne//(fetch = FetchType.LAZY)
