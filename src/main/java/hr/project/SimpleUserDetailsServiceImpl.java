@@ -1,4 +1,4 @@
-package hr.project;
+/*package hr.project;
 
 
 import hr.project.model.User;
@@ -32,3 +32,4 @@ public class SimpleUserDetailsServiceImpl implements UserDetailsService {
 
     }
 }
+*/

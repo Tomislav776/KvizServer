@@ -37,7 +37,7 @@ public class UserRestController {
         return new Error(404, "Object [" + id + "] not found");
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method=RequestMethod.GET)
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userRepository.findAll();
@@ -59,7 +59,7 @@ public class UserRestController {
         User userInDB = userRepository.findById(user.getId());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(user.getPassword(), userInDB.getPassword())) {
-            return new ResponseEntity<>(user, null, HttpStatus.OK);
+            return new ResponseEntity<>(userInDB, null, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(user, null, HttpStatus.UNAUTHORIZED);
         }
@@ -88,7 +88,7 @@ public class UserRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         try {

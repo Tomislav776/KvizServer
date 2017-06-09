@@ -22,8 +22,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Builder
-public class User implements UserDetails, Serializable{
+//@Builder
+public class User implements Serializable{ //UserDetails
 
     @Id
     @Column(name= "id")
@@ -79,7 +79,7 @@ public class User implements UserDetails, Serializable{
     @JsonIgnore
     @JoinColumn(name="course_id", insertable = false, updatable = false)
     private Course course;
-
+/*
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_" + this.role.getName()));
@@ -113,5 +113,5 @@ public class User implements UserDetails, Serializable{
     @Override
     public boolean isEnabled() {
         return true;
-    }
+    }*/
 }

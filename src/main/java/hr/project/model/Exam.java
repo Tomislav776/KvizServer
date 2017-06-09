@@ -37,8 +37,8 @@ public class Exam implements Serializable{
     private List<Question> questions;
 
     @ManyToOne// (fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinColumn(name="subject_id", insertable = false, updatable = false)
+    @JsonIgnore
     private Subject subject;
 
 }
