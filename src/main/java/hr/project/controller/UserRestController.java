@@ -12,10 +12,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.jws.soap.SOAPBinding;
+import javax.servlet.ServletContext;
+import java.io.*;
 import java.net.URI;
 import java.util.List;
 
@@ -27,6 +31,9 @@ public class UserRestController {
 
     @Autowired
     UserRestController(UserRepository userRepository) {this.userRepository = userRepository;}
+
+    @Autowired
+    ServletContext context;
 
     @ExceptionHandler(ObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -48,15 +55,15 @@ public class UserRestController {
     public ResponseEntity<User> findById(@PathVariable Integer id) {
         User user = userRepository.findById(id);
         if (user == null) { throw new ObjectNotFound(id); }
-        return ResponseEntity.ok(user);
+        return new ResponseEntity<>(user, null, HttpStatus.OK);
     }
 
     @RequestMapping(value="/login", method=RequestMethod.POST, consumes="application/json")
     public ResponseEntity<User> login(@RequestBody User user, UriComponentsBuilder ucb) {
-        User userInDB = userRepository.findById(user.getId());
+        User userInDB = userRepository.findByEmail(user.getEmail());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(user.getPassword(), userInDB.getPassword())) {
-            return new ResponseEntity<>(user, null, HttpStatus.OK);
+            return new ResponseEntity<>(userInDB, null, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(user, null, HttpStatus.UNAUTHORIZED);
         }
@@ -71,6 +78,80 @@ public class UserRestController {
             return new ResponseEntity<>(user, null, HttpStatus.CREATED);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(user);
+        }
+    }
+
+    /**
+     * Upload user photo
+     */
+    @RequestMapping(value = "/{id}/uploadImage", method = RequestMethod.POST)
+    public ResponseEntity<User> uploadFileHandler(@PathVariable Integer id,
+                                    @RequestParam("image") MultipartFile file) {
+
+        String absolutePath = context.getRealPath("resources/");
+
+        User user = null;
+
+        if (!(userRepository.exists(id))){
+            return ResponseEntity.notFound().build();
+        } else {
+            user = userRepository.findById(id);
+        }
+
+        String fileName = file.getOriginalFilename();
+
+        if (!file.isEmpty()) {
+            try {
+
+                // This buffer will store the data read from 'file'
+                byte[] buffer = new byte[1000];
+
+                String path = absolutePath + File.separator + id + File.separator + fileName;
+
+                // Creating the directory to store file
+                File dir = new File(absolutePath + File.separator + id);
+                if (!dir.exists())
+                    dir.mkdirs();
+
+                File outputFile = new File(path);
+
+                FileInputStream reader = null;
+                FileOutputStream writer = null;
+                try {
+                    outputFile.createNewFile();
+
+                    // Create the input stream of the uploaded file to read data from it.
+                    reader = (FileInputStream) file.getInputStream();
+
+                    // Create writer for 'outputFile' to write data read from 'file'
+                    writer = new FileOutputStream(outputFile);
+
+                    // Iteratively read data from 'file' and write to 'outputFile'
+                    int bytesRead = 0;
+                    while ((bytesRead = reader.read(buffer)) != -1) {
+                        writer.write(buffer);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        reader.close();
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                user.setId(id);
+                user.setImage(fileName);
+                userRepository.save(user);
+
+                return new ResponseEntity<>(user, null, HttpStatus.OK);
+            } catch (Exception e) {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
