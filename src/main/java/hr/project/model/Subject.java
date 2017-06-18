@@ -29,13 +29,18 @@ public class Subject implements Serializable{
     @Column(name= "semester")
     private Integer semester;
 
+    @Column(name= "question_counter")
+    private Integer question_counter;
+
     @OneToMany(mappedBy="subject")//, fetch = FetchType.LAZY)
     private List<Exam> exam;
 
-    @OneToMany(mappedBy="subject")//, fetch = FetchType.LAZY)
+ /*   @OneToMany(mappedBy="subject")//, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Game> Games;
-
+*/
     @OneToMany(mappedBy="subject")//, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Statistic> statistics;
 
     @ManyToOne//(fetch = FetchType.LAZY)

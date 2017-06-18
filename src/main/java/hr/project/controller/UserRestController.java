@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -42,6 +44,7 @@ public class UserRestController {
         return new Error(404, "Object [" + id + "] not found");
     }
 
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method=RequestMethod.GET)
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userRepository.findAll();
@@ -166,6 +169,7 @@ public class UserRestController {
         return ResponseEntity.noContent().build();
     }
 
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         try {

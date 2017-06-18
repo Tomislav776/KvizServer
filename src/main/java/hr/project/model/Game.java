@@ -21,9 +21,6 @@ public class Game implements Serializable {
     @GeneratedValue
     private Integer id;
 
-    @Column(name= "score")
-    private String score;
-
     @Column(name= "user1_points")
     private Integer user1_points;
 
@@ -38,12 +35,12 @@ public class Game implements Serializable {
 
     @Column(name= "user2_id")
     private Integer user2_id;
-
+/*
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="subject_id", insertable = false, updatable = false)
     private Subject subject;
-
+*/
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="user1_id", insertable = false, updatable = false)
