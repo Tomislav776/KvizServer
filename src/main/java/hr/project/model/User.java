@@ -23,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 //@Builder
-public class User implements Serializable{ //UserDetails
+public class User implements Serializable, UserDetails{ //UserDetails
 
     @Id
     @Column(name= "id")
@@ -79,7 +79,9 @@ public class User implements Serializable{ //UserDetails
     @JsonIgnore
     @JoinColumn(name="course_id", insertable = false, updatable = false)
     private Course course;
-/*
+
+
+    // Security
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_" + this.role.getName()));
@@ -113,5 +115,5 @@ public class User implements Serializable{ //UserDetails
     @Override
     public boolean isEnabled() {
         return true;
-    }*/
+    }
 }

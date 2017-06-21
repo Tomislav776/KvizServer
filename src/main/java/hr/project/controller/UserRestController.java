@@ -61,6 +61,7 @@ public class UserRestController {
         return new ResponseEntity<>(user, null, HttpStatus.OK);
     }
 
+
     @RequestMapping(value="/login", method=RequestMethod.POST, consumes="application/json")
     public ResponseEntity<User> login(@RequestBody User user, UriComponentsBuilder ucb) {
         User userInDB = userRepository.findByEmail(user.getEmail());

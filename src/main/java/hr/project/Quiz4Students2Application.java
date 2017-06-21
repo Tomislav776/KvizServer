@@ -17,6 +17,12 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;*/
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,7 +40,7 @@ public class Quiz4Students2Application {
     public static void main(String[] args) {
         SpringApplication.run(Quiz4Students2Application.class, args);
     }
-/*
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
@@ -61,10 +67,15 @@ public class Quiz4Students2Application {
 
        @Override
         protected void configure(HttpSecurity http) throws Exception {
+            /*
             http.authorizeRequests().anyRequest().fullyAuthenticated().and().
                     httpBasic().and().
                     csrf().disable();
+            */
+
+            http.authorizeRequests().antMatchers("/**", "/user/login").permitAll();
+            http.csrf().disable();
         }
-    }*/
+    }
 }
 
