@@ -44,7 +44,7 @@ public class UserRestController {
         return new Error(404, "Object [" + id + "] not found");
     }
 
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_admin')")
     @RequestMapping(method=RequestMethod.GET)
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userRepository.findAll();

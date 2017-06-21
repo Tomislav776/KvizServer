@@ -73,8 +73,9 @@ public class Quiz4Students2Application {
                     csrf().disable();
             */
 
-            http.authorizeRequests().antMatchers("/**", "/user/login").permitAll();
+            http.authorizeRequests().antMatchers("/**").permitAll().and().formLogin();
             http.csrf().disable();
+            http.rememberMe();
         }
     }
 }
