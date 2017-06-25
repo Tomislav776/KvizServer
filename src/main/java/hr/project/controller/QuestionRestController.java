@@ -15,6 +15,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -64,6 +66,20 @@ public class QuestionRestController {
         return ResponseEntity.ok(questions);
     }
 
+    @RequestMapping(value="/reports", method=RequestMethod.GET)
+    public ResponseEntity<List<Question>> getQuestionWhichHaveReports() {
+        List questions = configurarSessao().createQuery("select q from Question q inner join q.reports r inner join q.answers a where r.resolved = 0")
+                .list();
+
+        if (questions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Question> listWithoutDuplicates = new ArrayList<Question>(new HashSet<>(questions));
+
+        return ResponseEntity.ok(listWithoutDuplicates);
+    }
+
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<Question> findById(@PathVariable Integer id) {
         Question question = questionRepository.findById(id);
@@ -92,6 +108,7 @@ public class QuestionRestController {
         if (!(questionRepository.exists(id))){
             return ResponseEntity.notFound().build();
         }
+
         question.setId(id);
         questionRepository.save(question);
         return ResponseEntity.noContent().build();

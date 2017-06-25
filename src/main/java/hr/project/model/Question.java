@@ -28,10 +28,10 @@ public class Question implements Serializable {
     @Column(name= "exam_id")
     private Integer exam_id;
 
-    @OneToMany(mappedBy="question") //fetch = FetchType.LAZY
+    @OneToMany(mappedBy="question", cascade = CascadeType.ALL) //fetch = FetchType.LAZY
     private List<Report> reports;
 
-    @OneToMany(mappedBy="question")//fetch = FetchType.LAZY,
+    @OneToMany(mappedBy="question", cascade = CascadeType.ALL)//fetch = FetchType.LAZY,
     private List<Answer> answers;
 
     @ManyToOne//(fetch = FetchType.LAZY)

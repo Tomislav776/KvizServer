@@ -27,6 +27,9 @@ public class Report implements Serializable {
     @Column(name= "question_id")
     private Integer question_id;
 
+    @Column(name= "resolved")
+    private Integer resolved;
+
     @ManyToOne//(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name="question_id", insertable = false, updatable = false)
