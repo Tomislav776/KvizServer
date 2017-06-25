@@ -2,7 +2,9 @@ package hr.project.controller;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
+import hr.project.model.Answer;
 import hr.project.model.Question;
+import hr.project.repository.AnswerRepository;
 import hr.project.repository.QuestionRepository;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.util.List;
 @RequestMapping("/question")
 public class QuestionRestController {
     private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -32,8 +35,9 @@ public class QuestionRestController {
     }
 
     @Autowired
-    QuestionRestController(QuestionRepository questionRepository) {
+    QuestionRestController(QuestionRepository questionRepository, AnswerRepository answerRepository) {
         this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
     }
 
     @ExceptionHandler(ObjectNotFound.class)
@@ -91,13 +95,24 @@ public class QuestionRestController {
     public ResponseEntity<Question> saveQuestion(@RequestBody Question question, UriComponentsBuilder ucb) {
         HttpHeaders headers = new HttpHeaders();
 
-        try{
-            question = questionRepository.save(question);
+        List<Answer> answers = question.getAnswers();
+        String question_string = question.getQuestion();
+        Integer exam_id = question.getExam_id();
+
+        Question question1 = new Question(question_string, exam_id);
+
+        try {
+            question = questionRepository.save(question1);
+
+            for (int i = 0; i < answers.size(); i++) {
+                answers.get(i).setQuestion(question);
+                answerRepository.save(answers.get(i));
+            }
+
             URI locationUri = ucb.path("/question/").path(String.valueOf(question.getId())).build().toUri();
             headers.setLocation(locationUri);
             return new ResponseEntity<>(question, headers, HttpStatus.CREATED);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(question);
         }
     }

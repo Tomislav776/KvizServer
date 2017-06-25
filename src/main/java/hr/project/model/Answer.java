@@ -28,13 +28,13 @@ public class Answer implements Serializable {
     @Column(name= "correct")
     private boolean correct;
 
-    @Column(name= "question_id")
-    private Integer question_id;
+   /* @Column(name= "question_id")
+    private Integer question_id;*/
 
     //@JsonBackReference(value = "question-answers")
     @ManyToOne//(fetch = FetchType.LAZY)
     @JsonIgnore
-    @JoinColumn(name="question_id" , insertable = false, updatable = false)
+    @JoinColumn(name="question_id", insertable = true, updatable = true)
     private Question question;
 
 

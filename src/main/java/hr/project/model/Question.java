@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,11 @@ public class Question implements Serializable {
     @JsonIgnore
     @JoinColumn(name="exam_id", insertable = false, updatable = false)
     private Exam exam;
+
+    public Question(String question, Integer exam_id) {
+        this.question = question;
+        this.exam_id = exam_id;
+    }
 
 
 }
