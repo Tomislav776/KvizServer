@@ -1,7 +1,9 @@
 package hr.project.controller;
 
+import hr.project.ActiveUserStore;
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
+import hr.project.model.LoggedUser;
 import hr.project.model.Statistic;
 import hr.project.model.Title;
 import hr.project.model.User;
@@ -37,6 +39,9 @@ public class UserRestController {
     @Autowired
     ServletContext context;
 
+    @Autowired
+    ActiveUserStore activeUserStore;
+
     @ExceptionHandler(ObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Error objectNotFound(ObjectNotFound e) {
@@ -66,10 +71,23 @@ public class UserRestController {
         User userInDB = userRepository.findByEmail(user.getEmail());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(user.getPassword(), userInDB.getPassword())) {
+            LoggedUser loggedUser = new LoggedUser(activeUserStore);
+            loggedUser.setLoggedIn(user);
             return new ResponseEntity<>(userInDB, null, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(user, null, HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @RequestMapping(value="/logout", method=RequestMethod.POST, consumes="application/json")
+    public ResponseEntity<User> logout(@RequestBody User user, UriComponentsBuilder ucb) {
+        User userInDB = userRepository.findByEmail(user.getEmail());
+        if (userInDB != null) {
+            LoggedUser loggedUser = new LoggedUser(activeUserStore);
+            loggedUser.setLoggedOut(user);
+            return new ResponseEntity<>(userInDB, null, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(user, null, HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(method=RequestMethod.POST, consumes="application/json")

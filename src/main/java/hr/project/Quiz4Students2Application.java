@@ -34,6 +34,11 @@ public class Quiz4Students2Application {
     public static void main(String[] args) {
         SpringApplication.run(Quiz4Students2Application.class, args);
     }
+
+    @Bean
+    public ActiveUserStore activeUserStore(){
+        return new ActiveUserStore();
+    }
 /*
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
