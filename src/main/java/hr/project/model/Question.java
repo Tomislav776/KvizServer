@@ -29,6 +29,9 @@ public class Question implements Serializable {
     @Column(name= "exam_id")
     private Integer exam_id;
 
+    @Column(name= "verified", nullable = false)
+    private boolean verified;
+
     @OneToMany(mappedBy="question", cascade = CascadeType.ALL) //fetch = FetchType.LAZY
     private List<Report> reports;
 

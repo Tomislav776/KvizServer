@@ -84,6 +84,20 @@ public class QuestionRestController {
         return ResponseEntity.ok(listWithoutDuplicates);
     }
 
+    @RequestMapping(value="/toVerify", method=RequestMethod.GET)
+    public ResponseEntity<List<Question>> getQuestionWhichNeedToBeVerified() {
+        List questions = configurarSessao().createQuery("select q from Question q inner join q.answers a where q.verified = false")
+                .list();
+
+        if (questions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Question> listWithoutDuplicates = new ArrayList<Question>(new HashSet<>(questions));
+
+        return ResponseEntity.ok(listWithoutDuplicates);
+    }
+
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
     public ResponseEntity<Question> findById(@PathVariable Integer id) {
         Question question = questionRepository.findById(id);
@@ -118,7 +132,7 @@ public class QuestionRestController {
     }
 
     @RequestMapping(path="/{id}",method=RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Question question,@PathVariable Integer id)  {
+    public ResponseEntity<Question> update(@RequestBody Question question,@PathVariable Integer id)  {
 
         if (!(questionRepository.exists(id))){
             return ResponseEntity.notFound().build();
@@ -126,7 +140,7 @@ public class QuestionRestController {
 
         question.setId(id);
         questionRepository.save(question);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(question);
     }
 
     @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
