@@ -77,11 +77,12 @@ public class AnswerRestControllerTest {
                         "    \"question_id\": "+ answer.getQuestion_id() +"\n" +
                         "}")
                 .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isNoContent());
     }
 
     @Test
     public void deleteTest() throws Exception {
-        this.mockMvc.perform(delete("/answer/1")).andExpect(status().isOk());
+        this.mockMvc.perform(delete("/answer/1")).andDo(print()).andExpect(status().isOk());
     }
 }
