@@ -1,7 +1,7 @@
 package hr.project.controller;
 
-import hr.project.model.Course;
-import hr.project.repository.CourseRepository;
+import hr.project.model.Exam;
+import hr.project.repository.ExamRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,40 +21,40 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-public class CourseRestControllerTest {
-
+public class ExamRestControllerTest {
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
     @Autowired
-    private CourseRepository courseRepository;
+    ExamRepository examRepository;
 
     @Before
     public void before() {
-        Course course = new Course();
-        courseRepository.save(course);
+        Exam exam = new Exam();
+        examRepository.save(exam);
     }
 
     @Test
     public void exceptionHandlerTest() throws Exception {
-        this.mockMvc.perform(get("/course/100")).andDo(print()).andExpect(status().isNotFound());
+        this.mockMvc.perform(get("/exam/100")).andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
     public void getTest() throws Exception {
-        this.mockMvc.perform(get("/course/")).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/exam/")).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     public void getByIdTest() throws Exception {
-        this.mockMvc.perform(get("/course/1")).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/exam/1")).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     public void postTest() throws Exception {
-        this.mockMvc.perform(post("/course/")
+        this.mockMvc.perform(post("/exam/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":null," +
-                        "\"subjects\":[]}")
+                        "\"subject_id\":null," +
+                        "\"questions\":[]}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
@@ -62,12 +62,12 @@ public class CourseRestControllerTest {
 
     @Test
     public void putTest() throws Exception {
-        Course course = courseRepository.findById(1);
-        this.mockMvc.perform(put("/course/1")
+        this.mockMvc.perform(put("/exam/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":"+ course.getId() +"," +
-                        "\"name\":"+ course.getName() +"," +
-                        "\"subjects\":[]}")
+                .content("{\"id\":1," +
+                        "\"name\":null," +
+                        "\"subject_id\":null," +
+                        "\"questions\":[]}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -75,6 +75,8 @@ public class CourseRestControllerTest {
 
     @Test
     public void deleteTest() throws Exception {
-        this.mockMvc.perform(delete("/course/1")).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(delete("/exam/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

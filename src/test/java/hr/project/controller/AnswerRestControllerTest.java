@@ -38,6 +38,11 @@ public class AnswerRestControllerTest {
     }
 
     @Test
+    public void exceptionHandlerTest() throws Exception {
+        this.mockMvc.perform(get("/answer/100")).andDo(print()).andExpect(status().isNotFound());
+    }
+
+    @Test
     public void postTest() throws Exception {
         this.mockMvc.perform(post("/answer")
                 .contentType(MediaType.APPLICATION_JSON)
