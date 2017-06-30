@@ -188,6 +188,9 @@ public class UserRestController {
             return ResponseEntity.notFound().build();
         }
         user.setId(id);
+        // temporary fix - problem : (since we don't send the password with this request, it puts the password to NULL in the DB)
+        User userInDB = userRepository.findByEmail(user.getEmail());
+        user.setPassword(userInDB.getPassword());
         userRepository.save(user);
         return new ResponseEntity<>(user, null, HttpStatus.OK);
     }
