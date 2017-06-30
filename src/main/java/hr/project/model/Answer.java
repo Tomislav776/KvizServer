@@ -28,7 +28,7 @@ public class Answer implements Serializable {
     @Column(name= "correct")
     private boolean correct;
 
-   /* @Column(name= "question_id")
+    /*@Column(name= "question_id")
     private Integer question_id;*/
 
     //@JsonBackReference(value = "question-answers")

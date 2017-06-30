@@ -17,17 +17,31 @@ public class LoggedUser {
     public LoggedUser() {}
 
     public void setLoggedIn(User user) {
-        List<String> users = activeUserStore.getUsers();
-        if (!users.contains(user.getName())) {
-            users.add(user.getName());
+        List<User> users = activeUserStore.getUsers();
+        boolean check = true;
+
+        for (int i = 0 ; i< users.size(); i++){
+            if (users.get(i).getEmail().equals(user.getEmail())) {
+                check = false;
+                break;
+            }
+        }
+
+        if ( check ){
+            users.add(user);
         }
     }
 
     public void setLoggedOut(User user) {
-        List<String> users = activeUserStore.getUsers();
-        if (users.contains(user.getName())) {
-            users.remove(user.getName());
+        List<User> users = activeUserStore.getUsers();
+
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getEmail().equals(user.getEmail())) {
+                users.remove(user);
+                break;
+            }
         }
+
     }
 
     public ActiveUserStore getActiveUserStore() {

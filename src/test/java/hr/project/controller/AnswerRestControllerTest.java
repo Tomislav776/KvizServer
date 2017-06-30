@@ -79,7 +79,7 @@ public class AnswerRestControllerTest {
                         "    \"id\": "+ answer.getId() +",\n" +
                         "    \"answer\": "+ answer.getAnswer() +",\n" +
                         "    \"correct\": "+ answer.isCorrect() +",\n" +
-                        "    \"question_id\": "+ answer.getQuestion_id() +"\n" +
+                        "    \"question_id\": "+ answer.getId() +"\n" +
                         "}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

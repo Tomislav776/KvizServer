@@ -9,6 +9,7 @@ import hr.project.model.Title;
 import hr.project.model.User;
 import hr.project.repository.TitleRepository;
 import hr.project.repository.UserRepository;
+import hr.project.util.WebAgentSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import javax.servlet.ServletContext;
 import java.io.*;
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/user")
@@ -42,11 +44,23 @@ public class UserRestController {
     @Autowired
     ActiveUserStore activeUserStore;
 
+    @Autowired
+    WebAgentSessionRegistry webAgentSessionRegistry;
+
     @ExceptionHandler(ObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Error objectNotFound(ObjectNotFound e) {
         Integer id = e.getObjectId();
         return new Error(404, "Object [" + id + "] not found");
+    }
+
+    @RequestMapping(value="/activeUsers", method=RequestMethod.GET)
+    public ResponseEntity<ConcurrentHashMap<String, String>> getAllUsers() {
+        ConcurrentHashMap<String, String> map = webAgentSessionRegistry.getConcurrentMap();
+        if (map.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(map);
     }
 
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -77,7 +91,7 @@ public class UserRestController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(user.getPassword(), userInDB.getPassword())) {
             LoggedUser loggedUser = new LoggedUser(activeUserStore);
-            loggedUser.setLoggedIn(user);
+            loggedUser.setLoggedIn(userInDB);
             return new ResponseEntity<>(userInDB, null, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(user, null, HttpStatus.UNAUTHORIZED);

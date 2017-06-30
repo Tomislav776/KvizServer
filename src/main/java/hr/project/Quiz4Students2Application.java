@@ -1,35 +1,19 @@
 package hr.project;
 
-import hr.project.model.Course;
-import hr.project.model.Role;
-import hr.project.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import hr.project.util.ListeningGameQuestionRegistry;
+import hr.project.util.WebAgentSessionRegistry;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import hr.project.repository.*;
-import org.springframework.context.annotation.Configuration;
-/*import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;*/
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.*;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 
 
 @SpringBootApplication
-public class Quiz4Students2Application {
+public class Quiz4Students2Application extends SpringBootServletInitializer {
+
 
     public static void main(String[] args) {
         SpringApplication.run(Quiz4Students2Application.class, args);
@@ -38,6 +22,16 @@ public class Quiz4Students2Application {
     @Bean
     public ActiveUserStore activeUserStore(){
         return new ActiveUserStore();
+    }
+
+    @Bean
+    public WebAgentSessionRegistry webAgentSessionRegistry(){
+        return new WebAgentSessionRegistry();
+    }
+
+    @Bean
+    public ListeningGameQuestionRegistry listeningGameQuestionRegistry(){
+        return new ListeningGameQuestionRegistry();
     }
 /*
     @Bean
