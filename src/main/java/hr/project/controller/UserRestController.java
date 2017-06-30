@@ -68,7 +68,12 @@ public class UserRestController {
 
     @RequestMapping(value="/login", method=RequestMethod.POST, consumes="application/json")
     public ResponseEntity<User> login(@RequestBody User user, UriComponentsBuilder ucb) {
+        System.out.println(user);
         User userInDB = userRepository.findByEmail(user.getEmail());
+        System.out.println("userInDB " + userInDB);
+        if (userInDB == null) {
+            return new ResponseEntity<>(user, null, HttpStatus.UNAUTHORIZED);
+        }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(user.getPassword(), userInDB.getPassword())) {
             LoggedUser loggedUser = new LoggedUser(activeUserStore);
@@ -177,14 +182,14 @@ public class UserRestController {
     }
 
     @RequestMapping(path="/{id}",method=RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody User user,@PathVariable Integer id)  {
+    public ResponseEntity<User> update(@RequestBody User user,@PathVariable Integer id)  {
 
         if (!(userRepository.exists(id))){
             return ResponseEntity.notFound().build();
         }
         user.setId(id);
         userRepository.save(user);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(user, null, HttpStatus.OK);
     }
 
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
