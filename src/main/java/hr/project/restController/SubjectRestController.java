@@ -1,11 +1,10 @@
-package hr.project.controller;
+package hr.project.restController;
+
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Question;
-import hr.project.model.Report;
-import hr.project.repository.QuestionRepository;
-import hr.project.repository.ReportRepository;
+import hr.project.model.Subject;
+import hr.project.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,73 +16,73 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/report")
-public class ReportRestController {
-
-    private final ReportRepository reportRepository;
+@RequestMapping("/subject")
+public class SubjectRestController {
+    private final SubjectRepository subjectRepository;
 
     @Autowired
-    ReportRestController(ReportRepository reportRepository) {
-        this.reportRepository = reportRepository;
+    SubjectRestController(SubjectRepository subjectRepository) {
+        this.subjectRepository = subjectRepository;
     }
 
     @ExceptionHandler(ObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Error objectNotFound(ObjectNotFound e) {
+    public Error courseNotFound(ObjectNotFound e) {
         Integer id = e.getObjectId();
         return new Error(404, "Object [" + id + "] not found");
     }
 
     @RequestMapping(method=RequestMethod.GET)
-    public ResponseEntity<List<Report>> findAll() {
-        List<Report> reports = reportRepository.findAll();
-        if (reports.isEmpty()) {
+    public ResponseEntity<List<Subject>> findAll() {
+        List<Subject> subjects = subjectRepository.findAll();
+        if (subjects.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(reports);
+        return ResponseEntity.ok(subjects);
     }
 
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
-    public ResponseEntity<Report> findById(@PathVariable Integer id) {
-        Report report = reportRepository.findById(id);
-        if (report == null) { throw new ObjectNotFound(id); }
-        return ResponseEntity.ok(report);
+    public ResponseEntity<Subject> findById(@PathVariable Integer id) {
+        Subject subject = subjectRepository.findById(id);
+        if (subject == null) { throw new ObjectNotFound(id); }
+        return ResponseEntity.ok(subject);
     }
 
     @RequestMapping(method=RequestMethod.POST, consumes="application/json")
-    public ResponseEntity<Report> save(@RequestBody Report report, UriComponentsBuilder ucb) {
+    public ResponseEntity<Subject> save(@RequestBody Subject subject, UriComponentsBuilder ucb) {
         HttpHeaders headers = new HttpHeaders();
 
         try{
-            report = reportRepository.save(report);
-            URI locationUri = ucb.path("/report/").path(String.valueOf(report.getId())).build().toUri();
+            subject = subjectRepository.save(subject);
+            URI locationUri = ucb.path("/subject/").path(String.valueOf(subject.getId())).build().toUri();
             headers.setLocation(locationUri);
-            return new ResponseEntity<>(report, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(subject, headers, HttpStatus.CREATED);
         }
         catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(report);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(subject);
         }
     }
 
     @RequestMapping(path="/{id}",method=RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Report report,@PathVariable Integer id)  {
+    public ResponseEntity<Void> update(@RequestBody Subject subject,@PathVariable Integer id)  {
 
-        if (!(reportRepository.exists(id))){
+        if (!(subjectRepository.exists(id))){
             return ResponseEntity.notFound().build();
         }
-        report.setId(id);
-        reportRepository.save(report);
+        subject.setId(id);
+        subjectRepository.save(subject);
         return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         try {
-            reportRepository.delete(id);
+            subjectRepository.delete(id);
             return ResponseEntity.status(HttpStatus.OK).body("Item successfully deleted!");
         }
         catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error deleting the item:" + ex.toString());
         }
     }
+
 }

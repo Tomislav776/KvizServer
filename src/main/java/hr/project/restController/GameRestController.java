@@ -1,11 +1,8 @@
-package hr.project.controller;
+package hr.project.restController;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Exam;
 import hr.project.model.Game;
-import hr.project.model.Subject;
-import hr.project.repository.ExamRepository;
 import hr.project.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

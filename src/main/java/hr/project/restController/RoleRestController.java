@@ -1,11 +1,9 @@
-package hr.project.controller;
+package hr.project.restController;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Course;
-import hr.project.model.Exam;
-import hr.project.repository.CourseRepository;
-import hr.project.repository.ExamRepository;
+import hr.project.model.Role;
+import hr.project.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,28 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/exam")
-public class ExamRestController {
-    private final ExamRepository examRepository;
+@RequestMapping("/role")
+public class RoleRestController {
 
-    /*private EntityManager entityManager;
-
-    @PersistenceContext
-    private EntityManager em;
-    */
+    private final RoleRepository roleRepository;
 
     @Autowired
-    ExamRestController(ExamRepository examRepository) {
-        this.examRepository = examRepository;
-    }
+    RoleRestController(RoleRepository roleRepository) {this.roleRepository = roleRepository;}
 
     @ExceptionHandler(ObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -44,58 +31,55 @@ public class ExamRestController {
     }
 
     @RequestMapping(method=RequestMethod.GET)
-    public ResponseEntity<List<Exam>> findAll() {
-        List<Exam> exams = examRepository.findAll();
-        if (exams.isEmpty()) {
+    public ResponseEntity<List<Role>> findAll() {
+        List<Role> roles = roleRepository.findAll();
+        if (roles.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(exams);
+        return ResponseEntity.ok(roles);
     }
 
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
-    public ResponseEntity<Exam> findById(@PathVariable Integer id) {
-        Exam exam = examRepository.findById(id);
-        //Exam exam = examRepository.setSingleResultById(id);
-
-        if (exam == null) { throw new ObjectNotFound(id); }
-        return ResponseEntity.ok(exam);
+    public ResponseEntity<Role> findById(@PathVariable Integer id) {
+        Role role = roleRepository.findById(id);
+        if (role == null) { throw new ObjectNotFound(id); }
+        return ResponseEntity.ok(role);
     }
 
     @RequestMapping(method=RequestMethod.POST, consumes="application/json")
-    public ResponseEntity<Exam> save(@RequestBody Exam exam, UriComponentsBuilder ucb) {
+    public ResponseEntity<Role> save(@RequestBody Role role, UriComponentsBuilder ucb) {
         HttpHeaders headers = new HttpHeaders();
 
         try{
-            exam = examRepository.save(exam);
-            URI locationUri = ucb.path("/exam/").path(String.valueOf(exam.getId())).build().toUri();
+            role = roleRepository.save(role);
+            URI locationUri = ucb.path("/role/").path(String.valueOf(role.getId())).build().toUri();
             headers.setLocation(locationUri);
-            return new ResponseEntity<>(exam, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(role, headers, HttpStatus.CREATED);
         }
         catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exam);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(role);
         }
     }
 
     @RequestMapping(path="/{id}",method=RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Exam exam,@PathVariable Integer id)  {
+    public ResponseEntity<Void> update(@RequestBody Role role,@PathVariable Integer id)  {
 
-        if (!(examRepository.exists(id))){
+        if (!(roleRepository.exists(id))){
             return ResponseEntity.notFound().build();
         }
-        exam.setId(id);
-        examRepository.save(exam);
+        role.setId(id);
+        roleRepository.save(role);
         return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         try {
-            examRepository.delete(id);
+            roleRepository.delete(id);
             return ResponseEntity.status(HttpStatus.OK).body("Item successfully deleted!");
         }
         catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error deleting the item:" + ex.toString());
         }
     }
-
 }

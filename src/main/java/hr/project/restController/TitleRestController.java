@@ -1,10 +1,8 @@
-package hr.project.controller;
+package hr.project.restController;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Statistic;
 import hr.project.model.Title;
-import hr.project.repository.StatisticRepository;
 import hr.project.repository.TitleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

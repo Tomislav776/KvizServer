@@ -1,11 +1,8 @@
-package hr.project.controller;
+package hr.project.restController;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Report;
-import hr.project.model.Role;
 import hr.project.model.Statistic;
-import hr.project.repository.RoleRepository;
 import hr.project.repository.StatisticRepository;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;

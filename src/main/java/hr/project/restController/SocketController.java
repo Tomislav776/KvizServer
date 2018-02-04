@@ -1,4 +1,4 @@
-package hr.project.controller;
+package hr.project.restController;
 
 import hr.project.model.*;
 import hr.project.repository.AnswerRepository;

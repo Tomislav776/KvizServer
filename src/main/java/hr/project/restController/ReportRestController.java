@@ -1,9 +1,9 @@
-package hr.project.controller;
+package hr.project.restController;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Course;
-import hr.project.repository.CourseRepository;
+import hr.project.model.Report;
+import hr.project.repository.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,15 +15,15 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/course")
-public class CourseRestController {
+@RequestMapping("/report")
+public class ReportRestController {
 
-    private final CourseRepository courseRepository;
+    private final ReportRepository reportRepository;
 
     @Autowired
-    CourseRestController(CourseRepository courseRepository) {
-            this.courseRepository = courseRepository;
-        }
+    ReportRestController(ReportRepository reportRepository) {
+        this.reportRepository = reportRepository;
+    }
 
     @ExceptionHandler(ObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -33,59 +33,55 @@ public class CourseRestController {
     }
 
     @RequestMapping(method=RequestMethod.GET)
-    public ResponseEntity<List<Course>> findAll() {
-        List<Course> courses = courseRepository.findAll();
-        if (courses.isEmpty()) {
+    public ResponseEntity<List<Report>> findAll() {
+        List<Report> reports = reportRepository.findAll();
+        if (reports.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(courses);
+        return ResponseEntity.ok(reports);
     }
 
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
-    public ResponseEntity<Course> findById(@PathVariable Integer id) {
-        Course course = courseRepository.findById(id);
-        if (course == null) { throw new ObjectNotFound(id); }
-        return ResponseEntity.ok(course);
+    public ResponseEntity<Report> findById(@PathVariable Integer id) {
+        Report report = reportRepository.findById(id);
+        if (report == null) { throw new ObjectNotFound(id); }
+        return ResponseEntity.ok(report);
     }
 
     @RequestMapping(method=RequestMethod.POST, consumes="application/json")
-    public ResponseEntity<Course> save(@RequestBody Course course, UriComponentsBuilder ucb) {
+    public ResponseEntity<Report> save(@RequestBody Report report, UriComponentsBuilder ucb) {
         HttpHeaders headers = new HttpHeaders();
 
         try{
-            course = courseRepository.save(course);
-            URI locationUri = ucb.path("/course/").path(String.valueOf(course.getId())).build().toUri();
+            report = reportRepository.save(report);
+            URI locationUri = ucb.path("/report/").path(String.valueOf(report.getId())).build().toUri();
             headers.setLocation(locationUri);
-            return new ResponseEntity<>(course, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(report, headers, HttpStatus.CREATED);
         }
         catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(course);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(report);
         }
     }
 
     @RequestMapping(path="/{id}",method=RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Course course,@PathVariable Integer id)  {
+    public ResponseEntity<Void> update(@RequestBody Report report,@PathVariable Integer id)  {
 
-        if (!(courseRepository.exists(id))){
+        if (!(reportRepository.exists(id))){
             return ResponseEntity.notFound().build();
         }
-        course.setId(id);
-        courseRepository.save(course);
+        report.setId(id);
+        reportRepository.save(report);
         return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         try {
-            courseRepository.delete(id);
+            reportRepository.delete(id);
             return ResponseEntity.status(HttpStatus.OK).body("Item successfully deleted!");
         }
         catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error deleting the item:" + ex.toString());
         }
     }
-
-
 }
-
-

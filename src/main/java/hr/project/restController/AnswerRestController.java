@@ -1,11 +1,9 @@
-package hr.project.controller;
+package hr.project.restController;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Report;
-import hr.project.model.Role;
-import hr.project.repository.ReportRepository;
-import hr.project.repository.RoleRepository;
+import hr.project.model.Answer;
+import hr.project.repository.AnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,13 +15,15 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/role")
-public class RoleRestController {
-
-    private final RoleRepository roleRepository;
+@RequestMapping("/answer")
+public class AnswerRestController {
+/*/dsfds*/
+    private final AnswerRepository answerRepository;
 
     @Autowired
-    RoleRestController(RoleRepository roleRepository) {this.roleRepository = roleRepository;}
+    AnswerRestController(AnswerRepository answerRepository) {
+        this.answerRepository = answerRepository;
+    }
 
     @ExceptionHandler(ObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -33,55 +33,56 @@ public class RoleRestController {
     }
 
     @RequestMapping(method=RequestMethod.GET)
-    public ResponseEntity<List<Role>> findAll() {
-        List<Role> roles = roleRepository.findAll();
-        if (roles.isEmpty()) {
+    public ResponseEntity<List<Answer>> findAll() {
+        List<Answer> answers = answerRepository.findAll();
+        if (answers.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(roles);
+        return ResponseEntity.ok(answers);
     }
 
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
-    public ResponseEntity<Role> findById(@PathVariable Integer id) {
-        Role role = roleRepository.findById(id);
-        if (role == null) { throw new ObjectNotFound(id); }
-        return ResponseEntity.ok(role);
+    public ResponseEntity<Answer> findById(@PathVariable Integer id) {
+        Answer answer = answerRepository.findById(id);
+        if (answer == null) { throw new ObjectNotFound(id); }
+        return ResponseEntity.ok(answer);
     }
 
     @RequestMapping(method=RequestMethod.POST, consumes="application/json")
-    public ResponseEntity<Role> save(@RequestBody Role role, UriComponentsBuilder ucb) {
+    public ResponseEntity<Answer> save(@RequestBody Answer answer, UriComponentsBuilder ucb) {
         HttpHeaders headers = new HttpHeaders();
 
         try{
-            role = roleRepository.save(role);
-            URI locationUri = ucb.path("/role/").path(String.valueOf(role.getId())).build().toUri();
+            answer = answerRepository.save(answer);
+            URI locationUri = ucb.path("/answer/").path(String.valueOf(answer.getId())).build().toUri();
             headers.setLocation(locationUri);
-            return new ResponseEntity<>(role, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(answer, headers, HttpStatus.CREATED);
         }
         catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(role);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(answer);
         }
     }
 
     @RequestMapping(path="/{id}",method=RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Role role,@PathVariable Integer id)  {
+    public ResponseEntity<Void> update(@RequestBody Answer answer,@PathVariable Integer id)  {
 
-        if (!(roleRepository.exists(id))){
+        if (!(answerRepository.exists(id))){
             return ResponseEntity.notFound().build();
         }
-        role.setId(id);
-        roleRepository.save(role);
+        answer.setId(id);
+        answerRepository.save(answer);
         return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         try {
-            roleRepository.delete(id);
+            answerRepository.delete(id);
             return ResponseEntity.status(HttpStatus.OK).body("Item successfully deleted!");
         }
         catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error deleting the item:" + ex.toString());
         }
     }
+
 }

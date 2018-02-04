@@ -1,10 +1,8 @@
-package hr.project.controller;
+package hr.project.restController;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Answer;
 import hr.project.model.Course;
-import hr.project.repository.AnswerRepository;
 import hr.project.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,15 +15,15 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/answer")
-public class AnswerRestController {
-/*/dsfds*/
-    private final AnswerRepository answerRepository;
+@RequestMapping("/course")
+public class CourseRestController {
+
+    private final CourseRepository courseRepository;
 
     @Autowired
-    AnswerRestController(AnswerRepository answerRepository) {
-        this.answerRepository = answerRepository;
-    }
+    CourseRestController(CourseRepository courseRepository) {
+            this.courseRepository = courseRepository;
+        }
 
     @ExceptionHandler(ObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -35,51 +33,51 @@ public class AnswerRestController {
     }
 
     @RequestMapping(method=RequestMethod.GET)
-    public ResponseEntity<List<Answer>> findAll() {
-        List<Answer> answers = answerRepository.findAll();
-        if (answers.isEmpty()) {
+    public ResponseEntity<List<Course>> findAll() {
+        List<Course> courses = courseRepository.findAll();
+        if (courses.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(answers);
+        return ResponseEntity.ok(courses);
     }
 
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
-    public ResponseEntity<Answer> findById(@PathVariable Integer id) {
-        Answer answer = answerRepository.findById(id);
-        if (answer == null) { throw new ObjectNotFound(id); }
-        return ResponseEntity.ok(answer);
+    public ResponseEntity<Course> findById(@PathVariable Integer id) {
+        Course course = courseRepository.findById(id);
+        if (course == null) { throw new ObjectNotFound(id); }
+        return ResponseEntity.ok(course);
     }
 
     @RequestMapping(method=RequestMethod.POST, consumes="application/json")
-    public ResponseEntity<Answer> save(@RequestBody Answer answer, UriComponentsBuilder ucb) {
+    public ResponseEntity<Course> save(@RequestBody Course course, UriComponentsBuilder ucb) {
         HttpHeaders headers = new HttpHeaders();
 
         try{
-            answer = answerRepository.save(answer);
-            URI locationUri = ucb.path("/answer/").path(String.valueOf(answer.getId())).build().toUri();
+            course = courseRepository.save(course);
+            URI locationUri = ucb.path("/course/").path(String.valueOf(course.getId())).build().toUri();
             headers.setLocation(locationUri);
-            return new ResponseEntity<>(answer, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(course, headers, HttpStatus.CREATED);
         }
         catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(answer);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(course);
         }
     }
 
     @RequestMapping(path="/{id}",method=RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Answer answer,@PathVariable Integer id)  {
+    public ResponseEntity<Void> update(@RequestBody Course course,@PathVariable Integer id)  {
 
-        if (!(answerRepository.exists(id))){
+        if (!(courseRepository.exists(id))){
             return ResponseEntity.notFound().build();
         }
-        answer.setId(id);
-        answerRepository.save(answer);
+        course.setId(id);
+        courseRepository.save(course);
         return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         try {
-            answerRepository.delete(id);
+            courseRepository.delete(id);
             return ResponseEntity.status(HttpStatus.OK).body("Item successfully deleted!");
         }
         catch (Exception ex) {
@@ -87,4 +85,7 @@ public class AnswerRestController {
         }
     }
 
+
 }
+
+

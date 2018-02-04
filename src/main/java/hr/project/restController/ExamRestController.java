@@ -1,12 +1,9 @@
-package hr.project.controller;
-
+package hr.project.restController;
 
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
-import hr.project.model.Course;
-import hr.project.model.Subject;
-import hr.project.repository.CourseRepository;
-import hr.project.repository.SubjectRepository;
+import hr.project.model.Exam;
+import hr.project.repository.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,68 +15,76 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/subject")
-public class SubjectRestController {
-    private final SubjectRepository subjectRepository;
+@RequestMapping("/exam")
+public class ExamRestController {
+    private final ExamRepository examRepository;
+
+    /*private EntityManager entityManager;
+
+    @PersistenceContext
+    private EntityManager em;
+    */
 
     @Autowired
-    SubjectRestController(SubjectRepository subjectRepository) {
-        this.subjectRepository = subjectRepository;
+    ExamRestController(ExamRepository examRepository) {
+        this.examRepository = examRepository;
     }
 
     @ExceptionHandler(ObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Error courseNotFound(ObjectNotFound e) {
+    public Error objectNotFound(ObjectNotFound e) {
         Integer id = e.getObjectId();
         return new Error(404, "Object [" + id + "] not found");
     }
 
     @RequestMapping(method=RequestMethod.GET)
-    public ResponseEntity<List<Subject>> findAll() {
-        List<Subject> subjects = subjectRepository.findAll();
-        if (subjects.isEmpty()) {
+    public ResponseEntity<List<Exam>> findAll() {
+        List<Exam> exams = examRepository.findAll();
+        if (exams.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(subjects);
+        return ResponseEntity.ok(exams);
     }
 
     @RequestMapping(value="/{id}", method=RequestMethod.GET)
-    public ResponseEntity<Subject> findById(@PathVariable Integer id) {
-        Subject subject = subjectRepository.findById(id);
-        if (subject == null) { throw new ObjectNotFound(id); }
-        return ResponseEntity.ok(subject);
+    public ResponseEntity<Exam> findById(@PathVariable Integer id) {
+        Exam exam = examRepository.findById(id);
+        //Exam exam = examRepository.setSingleResultById(id);
+
+        if (exam == null) { throw new ObjectNotFound(id); }
+        return ResponseEntity.ok(exam);
     }
 
     @RequestMapping(method=RequestMethod.POST, consumes="application/json")
-    public ResponseEntity<Subject> save(@RequestBody Subject subject, UriComponentsBuilder ucb) {
+    public ResponseEntity<Exam> save(@RequestBody Exam exam, UriComponentsBuilder ucb) {
         HttpHeaders headers = new HttpHeaders();
 
         try{
-            subject = subjectRepository.save(subject);
-            URI locationUri = ucb.path("/subject/").path(String.valueOf(subject.getId())).build().toUri();
+            exam = examRepository.save(exam);
+            URI locationUri = ucb.path("/exam/").path(String.valueOf(exam.getId())).build().toUri();
             headers.setLocation(locationUri);
-            return new ResponseEntity<>(subject, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(exam, headers, HttpStatus.CREATED);
         }
         catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(subject);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exam);
         }
     }
 
     @RequestMapping(path="/{id}",method=RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Subject subject,@PathVariable Integer id)  {
+    public ResponseEntity<Void> update(@RequestBody Exam exam,@PathVariable Integer id)  {
 
-        if (!(subjectRepository.exists(id))){
+        if (!(examRepository.exists(id))){
             return ResponseEntity.notFound().build();
         }
-        subject.setId(id);
-        subjectRepository.save(subject);
+        exam.setId(id);
+        examRepository.save(exam);
         return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(value="/{id}", method= RequestMethod.DELETE)
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         try {
-            subjectRepository.delete(id);
+            examRepository.delete(id);
             return ResponseEntity.status(HttpStatus.OK).body("Item successfully deleted!");
         }
         catch (Exception ex) {

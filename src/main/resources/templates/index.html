@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="decorator/decorator">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <form id="question" th:action="@{/new-question}" th:object="${question}" method="post">
+
+            <div class="form-group">
+                <label>Smjer</label>
+                <select name="course" class="form-control" required="required">
+                    <option>Semestar</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Semestar</label>
+                <select name="course" class="form-control" required="required">
+                    <option>Semestar</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Predmet</label>
+                <select name="subject"  class="form-control" required="required">
+                    <option>Predmeti</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Ispit</label>
+                <select name="semester"  class="form-control" required="required">
+                    <option>Ispiti</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Pitanje</label>
+                <input class="form-control" name="question"  placeholder="Project name" required="required"/>
+            </div>
+
+            <div class="form-group">
+                <label>Odgovori</label>
+                <input class="form-control" name="answer[0]"  placeholder="Project name" required="required"/>
+                <input class="form-control" name="answer[1]"  placeholder="Project name" required="required"/>
+                <input class="form-control" name="answer[2]"  placeholder="Project name" required="required"/>
+                <input class="form-control" name="answer[3]"  placeholder="Project name" required="required"/>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

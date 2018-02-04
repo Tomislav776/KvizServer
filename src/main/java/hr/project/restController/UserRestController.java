@@ -1,31 +1,23 @@
-package hr.project.controller;
+package hr.project.restController;
 
 import hr.project.ActiveUserStore;
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
 import hr.project.model.LoggedUser;
-import hr.project.model.Statistic;
-import hr.project.model.Title;
 import hr.project.model.User;
-import hr.project.repository.TitleRepository;
 import hr.project.repository.UserRepository;
 import hr.project.util.WebAgentSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.jws.soap.SOAPBinding;
 import javax.servlet.ServletContext;
 import java.io.*;
-import java.net.URI;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
