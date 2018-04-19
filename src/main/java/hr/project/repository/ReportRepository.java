@@ -8,4 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ReportRepository extends JpaRepository<Report, Integer> {
 
     Report findById(Integer id);
+
+    long countByQuestion_id(Integer id);
 }

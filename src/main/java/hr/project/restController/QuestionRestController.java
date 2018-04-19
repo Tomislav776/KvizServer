@@ -59,7 +59,7 @@ public class QuestionRestController {
 
     @RequestMapping(value="/random/{examId}", method=RequestMethod.GET)
     public ResponseEntity<List<Question>> get10Random(@PathVariable Integer examId) {
-        List questions = configurarSessao().createQuery("select o from Question o where o.exam_id = :examId  order by rand()")
+        List questions = configurarSessao().createQuery("select o from Question o where o.exam_id = :examId and o.verified = true order by rand()")
                 .setParameter("examId", examId)
                 .setMaxResults(10)
                 .list();

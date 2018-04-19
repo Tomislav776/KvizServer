@@ -3,6 +3,7 @@ package hr.project.restController;
 import hr.project.exceptionHandling.Error;
 import hr.project.exceptionHandling.ObjectNotFound;
 import hr.project.model.Report;
+import hr.project.repository.QuestionRepository;
 import hr.project.repository.ReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,10 +20,12 @@ import java.util.List;
 public class ReportRestController {
 
     private final ReportRepository reportRepository;
+    private final QuestionRepository questionRepository;
 
     @Autowired
-    ReportRestController(ReportRepository reportRepository) {
+    ReportRestController(ReportRepository reportRepository, QuestionRepository questionRepository) {
         this.reportRepository = reportRepository;
+        this.questionRepository = questionRepository;
     }
 
     @ExceptionHandler(ObjectNotFound.class)
@@ -56,6 +59,14 @@ public class ReportRestController {
             report = reportRepository.save(report);
             URI locationUri = ucb.path("/report/").path(String.valueOf(report.getId())).build().toUri();
             headers.setLocation(locationUri);
+
+
+            long numberOfReportsForTheQuestion = reportRepository.countByQuestion_id(report.getQuestion_id());
+
+            if (numberOfReportsForTheQuestion >= 3) {
+                questionRepository.updateVerifiedStatus(report.getQuestion_id(), false);
+            }
+
             return new ResponseEntity<>(report, headers, HttpStatus.CREATED);
         }
         catch (Exception ex) {
