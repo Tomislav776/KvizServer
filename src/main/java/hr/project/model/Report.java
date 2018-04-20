@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +15,6 @@ import java.io.Serializable;
 @Table(name = "report")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Report implements Serializable {
 
     @Id
@@ -31,7 +32,46 @@ public class Report implements Serializable {
     private Integer resolved;
 
     @ManyToOne//(fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinColumn(name="question_id", insertable = false, updatable = false)
     private Question question;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getComplaint() {
+        return complaint;
+    }
+
+    public void setComplaint(String complaint) {
+        this.complaint = complaint;
+    }
+
+    public Integer getQuestion_id() {
+        return question_id;
+    }
+
+    public void setQuestion_id(Integer question_id) {
+        this.question_id = question_id;
+    }
+
+    public Integer getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(Integer resolved) {
+        this.resolved = resolved;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
 }

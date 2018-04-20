@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -18,7 +20,6 @@ import java.util.List;
 @Table(name = "exam")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Exam implements Serializable{
 
     @Id
@@ -33,12 +34,49 @@ public class Exam implements Serializable{
     private Integer subject_id;
 
     @OneToMany(mappedBy="exam")//, fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
-    @JsonIgnore
     private List<Question> questions;
 
     @ManyToOne// (fetch = FetchType.LAZY)
     @JoinColumn(name="subject_id", insertable = false, updatable = false)
-    @JsonIgnore
     private Subject subject;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getSubject_id() {
+        return subject_id;
+    }
+
+    public void setSubject_id(Integer subject_id) {
+        this.subject_id = subject_id;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
 }
