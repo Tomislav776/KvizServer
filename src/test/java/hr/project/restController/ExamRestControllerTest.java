@@ -1,7 +1,7 @@
-package hr.project.controller;
+package hr.project.restController;
 
-import hr.project.model.Statistic;
-import hr.project.repository.StatisticRepository;
+import hr.project.model.Exam;
+import hr.project.repository.ExamRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,64 +18,56 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@SpringBootTest
-@AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
-public class StatisticRestControllerTest {
+@AutoConfigureMockMvc
+@SpringBootTest
+public class ExamRestControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    StatisticRepository statisticRepository;
+    ExamRepository examRepository;
 
     @Before
-    public void before() throws Exception {
-        Statistic statistic = new Statistic();
-        statisticRepository.save(statistic);
+    public void before() {
+        Exam exam = new Exam();
+        examRepository.save(exam);
     }
 
     @Test
     public void exceptionHandlerTest() throws Exception {
-        this.mockMvc.perform(get("/statistic/100"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
+        this.mockMvc.perform(get("/exam/100")).andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
     public void getTest() throws Exception {
-        this.mockMvc.perform(get("/statistic"))
-                .andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/exam/")).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     public void getByIdTest() throws Exception {
-        this.mockMvc.perform(get("/statistic/1"))
-                .andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/exam/1")).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     public void postTest() throws Exception {
-        this.mockMvc.perform(post("/statistic")
-                .accept(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/exam/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"points\":null," +
-                        "\"user_id\":null," +
-                        "\"questions_user\":null," +
-                        "\"subject_id\":null}"))
+                .content("{\"name\":null," +
+                        "\"subject_id\":null," +
+                        "\"questions\":[]}")
+                .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void putTest() throws Exception {
-        this.mockMvc.perform(put("/statistic/1")
-                .content("{\"id\":1," +
-                        "\"points\":null," +
-                        "\"user_id\":null," +
-                        "\"questions_user\":null," +
-                        "\"subject_id\":null}")
+        this.mockMvc.perform(put("/exam/1")
                 .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\":1," +
+                        "\"name\":null," +
+                        "\"subject_id\":null," +
+                        "\"questions\":[]}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -83,7 +75,7 @@ public class StatisticRestControllerTest {
 
     @Test
     public void deleteTest() throws Exception {
-        this.mockMvc.perform(delete("/statistic/1"))
+        this.mockMvc.perform(delete("/exam/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

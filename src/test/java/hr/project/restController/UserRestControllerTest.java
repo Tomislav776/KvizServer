@@ -1,7 +1,7 @@
-package hr.project.controller;
+package hr.project.restController;
 
-import hr.project.model.Subject;
-import hr.project.repository.SubjectRepository;
+import hr.project.model.User;
+import hr.project.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,62 +21,102 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
-public class SubjectRestControllerTest {
+public class UserRestControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    SubjectRepository subjectRepository;
+    UserRepository userRepository;
 
     @Before
     public void before() throws Exception {
-        Subject subject = new Subject();
-        subjectRepository.save(subject);
+        User user = new User();
+        user.setPassword("a");
+        userRepository.save(user);
     }
 
     @Test
     public void exceptionHandlerTest() throws Exception {
-        this.mockMvc.perform(get("/subject/100"))
+        this.mockMvc.perform(get("/user/100"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void getTest() throws Exception {
-        this.mockMvc.perform(get("/subject"))
+        this.mockMvc.perform(get("/user"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getByIdTest() throws Exception {
-        this.mockMvc.perform(get("/subject/1"))
+        this.mockMvc.perform(get("/user/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
+    public void loginTest() throws Exception {
+        this.mockMvc.perform(post("/user/login")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\": 1," +
+                        "\"name\":null," +
+                        "\"email\":null," +
+                        "\"password\":\"\"," +
+                        "\"image\":null," +
+                        "\"semester\":null," +
+                        "\"role_id\":null," +
+                        "\"title_id\":null," +
+                        "\"course_id\":null," +
+                        "\"statistics\":[]," +
+                        "\"game1\":[]," +
+                        "\"game2\":[]," +
+                        "\"role\":null," +
+                        "\"title\":null}"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void postTest() throws Exception {
-        this.mockMvc.perform(post("/subject")
+        this.mockMvc.perform(post("/user")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":null," +
+                        "\"email\":null," +
+                        "\"password\":\"\"," +
+                        "\"image\":null," +
                         "\"semester\":null," +
-                        "\"exam\":[]," +
+                        "\"role_id\":null," +
+                        "\"title_id\":null," +
+                        "\"course_id\":null," +
                         "\"statistics\":[]," +
-                        "\"games\":[]}"))
+                        "\"game1\":[]," +
+                        "\"game2\":[]," +
+                        "\"role\":null," +
+                        "\"title\":null}"))
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void putTest() throws Exception {
-        this.mockMvc.perform(put("/subject/1")
+        this.mockMvc.perform(put("/user/1")
                 .content("{\"id\":1," +
                         "\"name\":null," +
+                        "\"email\":null," +
+                        "\"password\":\"a\"," +
+                        "\"image\":null," +
                         "\"semester\":null," +
-                        "\"exam\":[]," +
+                        "\"role_id\":null," +
+                        "\"title_id\":null," +
+                        "\"course_id\":null," +
                         "\"statistics\":[]," +
-                        "\"games\":[]}")
+                        "\"game1\":[]," +
+                        "\"game2\":[]," +
+                        "\"role\":null," +
+                        "\"title\":null}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -85,7 +125,7 @@ public class SubjectRestControllerTest {
 
     @Test
     public void deleteTest() throws Exception {
-        this.mockMvc.perform(delete("/subject/1"))
+        this.mockMvc.perform(delete("/user/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

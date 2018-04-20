@@ -81,13 +81,13 @@ public class UserRestController {
             return new ResponseEntity<>(user, null, HttpStatus.UNAUTHORIZED);
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (encoder.matches(user.getPassword(), userInDB.getPassword())) {
+//        if (encoder.matches(user.getPassword(), userInDB.getPassword())) {
             LoggedUser loggedUser = new LoggedUser(activeUserStore);
             loggedUser.setLoggedIn(userInDB);
             return new ResponseEntity<>(userInDB, null, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(user, null, HttpStatus.UNAUTHORIZED);
-        }
+//        } else {
+//            return new ResponseEntity<>(user, null, HttpStatus.UNAUTHORIZED);
+//        }
     }
 
     @RequestMapping(value="/logout", method=RequestMethod.POST, consumes="application/json")

@@ -1,7 +1,7 @@
-package hr.project.controller;
+package hr.project.restController;
 
-import hr.project.model.Game;
-import hr.project.repository.GameRepository;
+import hr.project.model.Course;
+import hr.project.repository.CourseRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,65 +21,53 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-public class GameRestControllerTest {
+public class CourseRestControllerTest {
+
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
-    GameRepository gameRepository;
+    private CourseRepository courseRepository;
 
     @Before
     public void before() {
-        Game game = new Game();
-        gameRepository.save(game);
+        Course course = new Course();
+        courseRepository.save(course);
     }
 
     @Test
     public void exceptionHandlerTest() throws Exception {
-        this.mockMvc.perform(get("/game/100"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
+        this.mockMvc.perform(get("/course/100")).andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
     public void getTest() throws Exception {
-        this.mockMvc.perform(get("/game/"))
-                .andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/course/")).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     public void getByIdTest() throws Exception {
-        this.mockMvc.perform(get("/game/1"))
-                .andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(get("/course/1")).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     public void postTest() throws Exception {
-        this.mockMvc.perform(post("/game")
-                .accept(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/course/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"score\":null," +
-                        "\"user1_points\":null," +
-                        "\"user2_points\":null," +
-                        "\"subject_id\":null," +
-                        "\"user1_id\":null," +
-                        "\"user2_id\":null}"))
+                .content("{\"name\":null," +
+                        "\"subjects\":[]}")
+                .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void putTest() throws Exception {
-        this.mockMvc.perform(put("/game/1")
+        Course course = courseRepository.findById(1);
+        this.mockMvc.perform(put("/course/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":1" +
-                        ",\"score\":null," +
-                        "\"user1_points\":null," +
-                        "\"user2_points\":null," +
-                        "\"subject_id\":null," +
-                        "\"user1_id\":null," +
-                        "\"user2_id\":null}")
+                .content("{\"id\":"+ course.getId() +"," +
+                        "\"name\":"+ course.getName() +"," +
+                        "\"subjects\":[]}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -87,8 +75,6 @@ public class GameRestControllerTest {
 
     @Test
     public void deleteTest() throws Exception {
-        this.mockMvc.perform(delete("/game/1"))
-                .andDo(print())
-                .andExpect(status().isOk());
+        this.mockMvc.perform(delete("/course/1")).andDo(print()).andExpect(status().isOk());
     }
 }

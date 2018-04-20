@@ -1,7 +1,7 @@
-package hr.project.controller;
+package hr.project.restController;
 
-import hr.project.model.Exam;
-import hr.project.repository.ExamRepository;
+import hr.project.model.Report;
+import hr.project.repository.ReportRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,56 +18,60 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
 @SpringBootTest
-public class ExamRestControllerTest {
+@AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
+public class ReportRestControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    ExamRepository examRepository;
+    ReportRepository reportRepository;
 
     @Before
-    public void before() {
-        Exam exam = new Exam();
-        examRepository.save(exam);
+    public void before() throws Exception {
+        Report report = new Report();
+        reportRepository.save(report);
     }
 
     @Test
     public void exceptionHandlerTest() throws Exception {
-        this.mockMvc.perform(get("/exam/100")).andDo(print()).andExpect(status().isNotFound());
+        this.mockMvc.perform(get("/report/100"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
     public void getTest() throws Exception {
-        this.mockMvc.perform(get("/exam/")).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/report"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
     public void getByIdTest() throws Exception {
-        this.mockMvc.perform(get("/exam/1")).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/report/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
     public void postTest() throws Exception {
-        this.mockMvc.perform(post("/exam/")
+        this.mockMvc.perform(post("/report")
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":null," +
-                        "\"subject_id\":null," +
-                        "\"questions\":[]}")
-                .accept(MediaType.APPLICATION_JSON))
+                .content("{\"complaint\":null," +
+                        "\"question_id\":null}"))
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void putTest() throws Exception {
-        this.mockMvc.perform(put("/exam/1")
-                .contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(put("/report/1")
                 .content("{\"id\":1," +
-                        "\"name\":null," +
-                        "\"subject_id\":null," +
-                        "\"questions\":[]}")
+                        "\"complaint\":null," +
+                        "\"question_id\":null}")
+                .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -75,7 +79,7 @@ public class ExamRestControllerTest {
 
     @Test
     public void deleteTest() throws Exception {
-        this.mockMvc.perform(delete("/exam/1"))
+        this.mockMvc.perform(delete("/report/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

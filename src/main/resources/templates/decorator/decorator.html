@@ -5,17 +5,18 @@
     <meta charset="UTF-8"/>
     <title>Kviz</title>
 
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/media/css/main.css}" href="../../media/css/main.css" />
 
 </head>
 <body>
+<div th:replace="partials/header :: header"/>
 
-<div th:replace="partials/navigation :: navigation"></div>
-
-<section layout:fragment="content">
-    <!-- CONTENT GOES HERE -->
-</section>
-
+<div class="container">
+    <section layout:fragment="content">
+        <!-- CONTENT GOES HERE -->
+    </section>
+</div>
 <script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
 

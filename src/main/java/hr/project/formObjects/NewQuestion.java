@@ -10,8 +10,18 @@ public class NewQuestion {
     public String course;
     public String subject;
     public String semester;
-    public Question question;
+    public String question;
+    public String exam;
     public List<Answer> answers;
+    public String correct;
+
+    public String getCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(String correct) {
+        this.correct = correct;
+    }
 
     public String getCourse() {
         return course;
@@ -37,12 +47,20 @@ public class NewQuestion {
         this.semester = semester;
     }
 
-    public Question getQuestion() {
+    public String getQuestion() {
         return question;
     }
 
-    public void setQuestion(Question question) {
+    public void setQuestion(String question) {
         this.question = question;
+    }
+
+    public String getExam() {
+        return exam;
+    }
+
+    public void setExam(String exam) {
+        this.exam = exam;
     }
 
     public List<Answer> getAnswers() {

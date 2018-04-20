@@ -1,7 +1,7 @@
-package hr.project.controller;
+package hr.project.restController;
 
-import hr.project.model.Report;
-import hr.project.repository.ReportRepository;
+import hr.project.model.Statistic;
+import hr.project.repository.StatisticRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,56 +21,60 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
-public class ReportRestControllerTest {
+public class StatisticRestControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    ReportRepository reportRepository;
+    StatisticRepository statisticRepository;
 
     @Before
     public void before() throws Exception {
-        Report report = new Report();
-        reportRepository.save(report);
+        Statistic statistic = new Statistic();
+        statisticRepository.save(statistic);
     }
 
     @Test
     public void exceptionHandlerTest() throws Exception {
-        this.mockMvc.perform(get("/report/100"))
+        this.mockMvc.perform(get("/statistic/100"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void getTest() throws Exception {
-        this.mockMvc.perform(get("/report"))
+        this.mockMvc.perform(get("/statistic"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getByIdTest() throws Exception {
-        this.mockMvc.perform(get("/report/1"))
+        this.mockMvc.perform(get("/statistic/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     public void postTest() throws Exception {
-        this.mockMvc.perform(post("/report")
+        this.mockMvc.perform(post("/statistic")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"complaint\":null," +
-                        "\"question_id\":null}"))
+                .content("{\"points\":null," +
+                        "\"user_id\":null," +
+                        "\"questions_user\":null," +
+                        "\"subject_id\":null}"))
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void putTest() throws Exception {
-        this.mockMvc.perform(put("/report/1")
+        this.mockMvc.perform(put("/statistic/1")
                 .content("{\"id\":1," +
-                        "\"complaint\":null," +
-                        "\"question_id\":null}")
+                        "\"points\":null," +
+                        "\"user_id\":null," +
+                        "\"questions_user\":null," +
+                        "\"subject_id\":null}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -79,7 +83,7 @@ public class ReportRestControllerTest {
 
     @Test
     public void deleteTest() throws Exception {
-        this.mockMvc.perform(delete("/report/1"))
+        this.mockMvc.perform(delete("/statistic/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
